@@ -1,3 +1,3 @@
 module.exports = {
-    MOGOURI:process.env.MONGOURI
+    MOGOURI:process.env.MOGOURI
 }
