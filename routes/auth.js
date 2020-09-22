@@ -9,5 +9,9 @@ router.post('/signup',[
     // check("password").isLength({ min: 5 }).withMessage('password must be at least 5 chars long'),
 ], signup)
 
+router.get('/',(req,res)=>{
+    res.send("This is home page")
+})
+
 
 module.exports = router;
