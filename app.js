@@ -2,14 +2,14 @@ const express = require('express');
 const app = express()
 const PORT = process.env.PORT || 5000
 const mongoose = require('mongoose')
-const {MOGOURI} = require('./config/keys')
+const {MONGOURI} = require('./config/keys')
 app.use(express.json())
 
 const authRoute = require('./routes/auth')
 
 
 //RUetZw4UcF5x1klU
-mongoose.connect(MOGOURI, {
+mongoose.connect(MONGOURI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true
