@@ -1,8 +1,9 @@
 const express = require('express');
 const app = express()
+
 const PORT = process.env.PORT || 5000
 const mongoose = require('mongoose')
-const {MONGOURI} = require('./config/keys')
+const { MONGOURI } = require('./config/keys')
 app.use(express.json())
 
 const authRoute = require('./routes/auth')
@@ -17,8 +18,8 @@ mongoose.connect(MONGOURI, {
     console.log("DB CONNECTED..................")
 })
 
-app.use('/api',authRoute)
+app.use('/api', authRoute)
 
-app.listen(PORT,()=>{
-    console.log("server is running on PORT ",PORT)
+app.listen(PORT, () => {
+    console.log("server is running on PORT ", PORT)
 })
