@@ -8,17 +8,17 @@ const { JWT_SECRET } = require('../config/keys')
 exports.signup = (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({ error: errors.array()[0].msg });
+    return res.json({ error: errors.array()[0].msg });
   }
 
   const { name, email, password } = req.body;
   if (!name || !email || !password) {
-    res.status(400).json({ error: "All fileds are mandatory!" });
+    return res.json({ error: "All fileds are mandatory!" });
   }
 
   User.findOne({ email: email }).then((savedUser) => {
     if (savedUser) {
-      return res.status(422).json({ error: "Email id already registered!" });
+      return res.json({ error: "Email id already registered!" });
     } else {
       bcrypt.hash(password, 12, (err, hash) => {
         if (hash) {
@@ -30,21 +30,20 @@ exports.signup = (req, res) => {
 
           user.save((err, user) => {
             if (err) {
-              return res.status(400).json({
+              return res.json({
                 error: "Not able to save user in DB",
               });
             }
+            user.password = undefined
+            user.role = undefined
+            user.__v = undefined
             res.json({
               message: "Successfully created...",
-              data: {
-                name: user.name,
-                email: user.email,
-                id: user._id,
-              },
+              data: user,
             });
           });
         } else {
-          return res.status(400).json({
+          return res.json({
             error: "Not able to save user in DB",
           });
         }
@@ -56,17 +55,17 @@ exports.signup = (req, res) => {
 exports.signin = (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({ error: errors.array()[0].msg });
+    return res.json({ error: errors.array()[0].msg });
   }
 
   const { email, password } = req.body;
   if (!email || !password) {
-    res.status(400).json({ error: "All fileds are mandatory!" });
+    return res.json({ error: "All fileds are mandatory!" });
   }
 
   User.findOne({ email }, (err, user) => {
     if (err || !user) {
-      return res.status(400).json({
+      return res.json({
         error: "User email does not exist!",
       });
     }
@@ -85,22 +84,18 @@ exports.signin = (req, res) => {
   });
 };
 
-exports.protected = (req, res) => {
-  res.send("Hello protected user")
-}
-
 //middleware
 exports.isLoggedIn = (req, res, next) => {
   const { authorization } = req.headers
   if (!authorization) {
-    return res.status(401).json({
+    return res.json({
       error: "No token found!"
     })
   }
   const token = authorization.replace("Bearer ", "")
   jwt.verify(token, JWT_SECRET, (err, payload) => {
     if (err) {
-      return res.status(401).json({
+      return res.json({
         error: "Access Denied!"
       })
     }
@@ -111,4 +106,13 @@ exports.isLoggedIn = (req, res, next) => {
     })
   })
 }
+
+exports.isAdmin = (req, res, next) => {
+  if (req.user.role === 0) {
+    return res.json({
+      error: "You are not an admin!",
+    });
+  }
+  next();
+};
 
