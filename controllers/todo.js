@@ -76,6 +76,8 @@ exports.getAllEducation = (req, res) => {
     })
 }
 
+// if image uploaded to any other resource and only saving the url of image,the use this way
+
 // exports.createTodo = (req, res) => {
 //     const { title, education, todos, todo_date, photo } = req.body;
 //     if (!todos || !todo_date || !education) {
@@ -111,10 +113,6 @@ exports.getAllEducation = (req, res) => {
 //         })
 // }
 
-//      "title":"Need to study 8",
-//     "education":"5f6f8a431247e20d28d4c290",
-//     "todos":["5f6f847cf9e74b0c4e910017","5f6f7bc92904280b7d31a36e","5f6f7ba32904280b7d31a36d"],
-//     "todo_date":"2020-08-08"
 
 exports.createTodo = (req, res) => {
     const form = new formidable.IncomingForm()
@@ -142,20 +140,21 @@ exports.createTodo = (req, res) => {
                         createdBy: req.user,
                         title,
                         education,
-                        todos,
+                        todos: JSON.parse(todos),
                         todo_date,
                         photo
                     })
 
                     //handling image
-                    if (file.photo.size > 5000000) {
-                        return res.json({
-                            error: "File size too big!"
-                        })
+                    if (photo) {
+                        if (file.photo.size > 5000000) {
+                            return res.json({
+                                error: "File size too big!"
+                            })
+                        }
+                        todoDetails.photo.data = fs.readFileSync(file.photo.path)
+                        todoDetails.photo.contentType = file.photo.type
                     }
-                    todoDetails.photo.data = fs.readFileSync(file.photo.path)
-                    todoDetails.photo.contentType = file.photo.type
-
                     todoDetails.save((err, todoDetails) => {
                         if (err) {
                             console.log("db error--->", err)

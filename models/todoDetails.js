@@ -25,8 +25,6 @@ const todoDetailsSchema = new mongoose.Schema({
         required: true
     },
     photo: {
-        // type: String,
-        // default: "No photo"
         data: Buffer,
         contentType: String
     }
