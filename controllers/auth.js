@@ -108,6 +108,7 @@ exports.isLoggedIn = (req, res, next) => {
 }
 
 exports.isAdmin = (req, res, next) => {
+  //this role can be accessed because in isLogged in middleware we are assigning userData to req.user
   if (req.user.role === 0) {
     return res.json({
       error: "You are not an admin!",
