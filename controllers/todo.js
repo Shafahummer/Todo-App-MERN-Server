@@ -1,8 +1,10 @@
 const Todos = require("../models/todo");
 const Education = require("../models/education");
 const TodoDetails = require("../models/todoDetails");
+const User = require("../models/user");
 const formidable = require('formidable');
 const fs = require('fs');
+
 
 exports.addTodo = (req, res) => {
     const { todo } = req.body;
@@ -76,44 +78,7 @@ exports.getAllEducation = (req, res) => {
     })
 }
 
-// if image uploaded to any other resource and only saving the url of image,the use this way
-
-// exports.createTodo = (req, res) => {
-//     const { title, education, todos, todo_date, photo } = req.body;
-//     if (!todos || !todo_date || !education) {
-//         return res.json({ error: "Todo title,education and date are mandatory..." });
-//     }
-//     TodoDetails.findOne({ title: title, createdBy: req.user._id })
-//         .then((savedTodoDetails) => {
-//             if (savedTodoDetails) {
-//                 return res.json({ error: "Todo title already exists!" });
-//             } else {
-//                 const todoDetails = new TodoDetails({
-//                     createdBy: req.user,
-//                     title,
-//                     education,
-//                     todos,
-//                     todo_date,
-//                     photo
-//                 })
-//                 todoDetails.save((err, todoDetails) => {
-//                     if (err) {
-//                         return res.json({
-//                             error: "Not able to save todo!"
-//                         })
-//                     }
-//                     todoDetails.createdBy.password = undefined
-//                     todoDetails.createdBy.role = undefined
-//                     res.json({
-//                         message: "Todo created successfully...",
-//                         todo: todoDetails
-//                     })
-//                 })
-//             }
-//         })
-// }
-
-
+//if image needs to store in the database itself, then use this way
 exports.createTodo = (req, res) => {
     const form = new formidable.IncomingForm()
     form.keepExtensions = true
@@ -162,12 +127,22 @@ exports.createTodo = (req, res) => {
                                 error: "Not able to save todo!"
                             })
                         }
-                        todoDetails.createdBy.password = undefined
-                        todoDetails.createdBy.role = undefined
-                        res.json({
-                            message: "Todo created successfully...",
-                            todo: todoDetails
-                        })
+                        User.updateOne(
+                            { _id: req.user._id },
+                            { $set: { todo_added: 1 } }
+                        )
+                            .then(result => {
+                                todoDetails.createdBy.password = undefined
+                                todoDetails.createdBy.role = undefined
+                                todoDetails.createdBy.todo_added = undefined
+                                res.json({
+                                    message: "Todo created successfully...",
+                                    todo: todoDetails
+                                })
+                            })
+                            .catch(err => {
+                                res.json({ error: err })
+                            })
                     })
                 }
             })

@@ -7,6 +7,7 @@ const { MONGOURI } = require('./config/keys')
 
 const authRoute = require('./routes/auth')
 const todoRoute = require('./routes/todo')
+const userRoute = require('./routes/user')
 
 
 //RUetZw4UcF5x1klU
@@ -22,6 +23,7 @@ app.use(express.json())
 
 app.use('/api', authRoute)
 app.use('/api', todoRoute)
+app.use('/api', userRoute)
 
 app.listen(PORT, () => {
     console.log("server is running on PORT ", PORT)

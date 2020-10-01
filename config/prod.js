@@ -1,4 +1,7 @@
 module.exports = {
     MONGOURI: process.env.MONGOURI,
-    JWT_SECRET: process.env.JWT_SECRET
+    JWT_SECRET: process.env.JWT_SECRET,
+    AWS_ACCESS_KEY: process.env.AWS_ACCESS_KEY,
+    AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
+    AWS_BUCKET_NAME: process.env.AWS_BUCKET_NAME
 }

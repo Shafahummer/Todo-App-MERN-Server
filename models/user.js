@@ -9,7 +9,8 @@ const userSchema = new mongoose.Schema({
     email: {
         type: String,
         required: true,
-        trim: true
+        trim: true,
+        unique: true
     },
     password: {
         type: String,
@@ -19,6 +20,14 @@ const userSchema = new mongoose.Schema({
     role: {
         type: Number,
         trim: true,
+        default: 0
+    },
+    profile: {
+        type: String,
+        trim: true
+    },
+    todo_added: {
+        type: Number,
         default: 0
     }
 }, { timestamps: true })

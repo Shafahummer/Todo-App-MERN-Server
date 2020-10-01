@@ -72,10 +72,13 @@ exports.signin = (req, res) => {
     bcrypt.compare(password, user.password, (err, result) => {
       // result == true
       if (result) {
+        user.password = undefined
+        user.role = undefined
         const token = jwt.sign({ _id: user._id }, JWT_SECRET);
         return res.json({
           message: "Successfully signed in...",
-          token
+          token,
+          user
         });
       } else {
         return res.json({ error: "Invalid email or password!" });
