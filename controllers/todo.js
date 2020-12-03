@@ -96,6 +96,7 @@ exports.createTodo = (req, res) => {
                     return res.json({ error: "Todo title already exists!" });
                 } else {
                     const { title, education, todos, todo_date, photo } = fields
+                    console.log("PHOTO:", photo);
 
                     if (!todos || !todo_date || !education) {
                         return res.json({ error: "Todo title,education and date are mandatory..." });
@@ -119,6 +120,9 @@ exports.createTodo = (req, res) => {
                         }
                         todoDetails.photo.data = fs.readFileSync(file.photo.path)
                         todoDetails.photo.contentType = file.photo.type
+
+                        console.log("DATA :", fs.readFileSync(file.photo.path));
+                        console.log("TYPE :", file.photo.type);
                     }
                     todoDetails.save((err, todoDetails) => {
                         if (err) {

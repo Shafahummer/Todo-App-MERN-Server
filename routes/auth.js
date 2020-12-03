@@ -15,9 +15,4 @@ router.post('/signin', [
 ], signin)
 
 
-router.get('/', (req, res) => {
-    res.send("This is home page")
-})
-
-
 module.exports = router;

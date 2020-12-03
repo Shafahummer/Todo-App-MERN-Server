@@ -5,6 +5,7 @@ const PORT = process.env.PORT || 5000
 const mongoose = require('mongoose')
 const { MONGOURI } = require('./config/keys')
 
+const adminRoute = require('./routes/admin')
 const authRoute = require('./routes/auth')
 const todoRoute = require('./routes/todo')
 const userRoute = require('./routes/user')
@@ -21,9 +22,14 @@ mongoose.connect(MONGOURI, {
 
 app.use(express.json())
 
+app.use('/api/admin', adminRoute)
 app.use('/api', authRoute)
 app.use('/api', todoRoute)
 app.use('/api', userRoute)
+
+app.get('/', (req, res) => {
+    res.send("Home Page...")
+})
 
 app.listen(PORT, () => {
     console.log("server is running on PORT ", PORT)
