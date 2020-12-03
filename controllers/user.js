@@ -11,6 +11,7 @@ exports.getUser = (req, res) => {
             if (!user) {
                 return res.json({ error: "User not found!" })
             }
+            user.password = undefined
             res.json({ user })
         })
 }
@@ -46,7 +47,26 @@ exports.updateUser = (req, res) => {
         if (err) {
             return res.json({ error: err })
         }
-        res.json({ data })
+        // res.json({ data })
+
+        User.findOne({ _id: req.user._id }, (err, user) => {
+            if (err || !user) {
+                return res.json({ error: "User not found!" })
+            }
+            User.updateOne(
+                { _id: req.user._id },
+                { $set: { profile: data.Location } }
+            )
+                .then(result => {
+                    res.json({
+                        message: "Profile updated successfully...",
+                    })
+                })
+                .catch(err => {
+                    return res.json({ error: err })
+                })
+
+        })
     })
 
 
