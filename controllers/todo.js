@@ -97,7 +97,7 @@ exports.createTodo = (req, res) => {
                 } else {
                     const { title, education, todos, todo_date, photo } = fields
 
-                    if (!todos || !todo_date || !education) {
+                    if (!title || !todos || !todo_date || !education) {
                         return res.json({ error: "Todo title,education and date are mandatory..." });
                     }
 
@@ -113,9 +113,9 @@ exports.createTodo = (req, res) => {
                     //handling image
                     if (file.photo) {
                         if (file.photo.size > 5000000) {
-                            return res.json({
-                                error: "File size too big!"
-                            })
+                            // return res.json({
+                            //     error: "File size too big!"
+                            // })
                         }
                         todoDetails.photo.data = fs.readFileSync(file.photo.path)
                         todoDetails.photo.contentType = file.photo.type
